@@ -1,21 +1,18 @@
 use crate::colours::red;
-use crate::{error::ShellError, executor};
+use crate::{error::ShellError, executor, prompt};
 use std::io::{self, Write};
 
-pub struct Shell {
-    prompt: String,
-}
+pub struct Shell;
 
 impl Shell {
     pub fn new() -> Self {
-        Self {
-            prompt: "bsh> ".to_string(),
-        }
+        Self
     }
 
     pub fn run(&mut self) -> Result<(), ShellError> {
         loop {
-            print!("{}", self.prompt);
+            let prompt = prompt::generate_prompt();
+            print!("{}", prompt);
             io::stdout().flush().map_err(ShellError::from)?;
 
             let mut input = String::new();

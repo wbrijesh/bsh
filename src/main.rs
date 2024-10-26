@@ -4,6 +4,7 @@ mod colours;
 mod error;
 mod executor;
 mod parser;
+mod prompt;
 mod shell;
 mod tests;
 
