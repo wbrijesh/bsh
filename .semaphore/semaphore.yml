@@ -2,11 +2,11 @@ version: v1.0
 name: Rust
 agent:
   machine:
-    type: f1-standard-2
+    type: e1-standard-2
     os_image: ubuntu2004
   containers:
     - name: main
-      image: 'registry.semaphoreci.com/rust:1.47'
+      image: 'registry.semaphoreci.com/rust:1.82'
 blocks:
   - name: Test
     task:
