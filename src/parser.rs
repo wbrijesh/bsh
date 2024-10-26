@@ -1,11 +1,16 @@
 use std::str::FromStr;
 
+#[derive(Debug, PartialEq)]
 pub struct ParsedCommand {
     pub command: String,
     pub args: Vec<String>,
 }
 
 pub fn parse(input: &str) -> Result<ParsedCommand, &'static str> {
+    if input.trim().is_empty() {
+        return Err("Empty input should result in error");
+    }
+
     let mut command = String::new();
     let mut args = Vec::new();
     let mut current_arg = String::new();

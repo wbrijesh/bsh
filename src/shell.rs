@@ -1,3 +1,4 @@
+use crate::colours::red;
 use crate::{error::ShellError, executor};
 use std::io::{self, Write};
 
@@ -15,12 +16,12 @@ impl Shell {
     pub fn run(&mut self) -> Result<(), ShellError> {
         loop {
             print!("{}", self.prompt);
-            io::stdout().flush().map_err(|e| ShellError::Io(e))?;
+            io::stdout().flush().map_err(ShellError::from)?;
 
             let mut input = String::new();
             io::stdin()
                 .read_line(&mut input)
-                .map_err(|e| ShellError::Io(e))?;
+                .map_err(ShellError::from)?;
             let input = input.trim();
 
             if input.is_empty() {
@@ -31,7 +32,10 @@ impl Shell {
                 break;
             }
 
-            executor::execute(input)?;
+            match executor::execute(input) {
+                Ok(_) => {}
+                Err(err) => eprintln!("{}: {}", red("Error"), err),
+            }
         }
         Ok(())
     }
