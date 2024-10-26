@@ -16,11 +16,26 @@ pub fn parse(input: &str) -> Result<ParsedCommand, &'static str> {
     let mut current_arg = String::new();
     let mut in_single_quote = false;
     let mut in_double_quote = false;
+    let mut escape_next = false;
 
     let chars = input.chars().collect::<Vec<_>>();
 
     for c in chars {
+        if escape_next {
+            match c {
+                'r' => current_arg.push('\r'),
+                'n' => current_arg.push('\n'),
+                't' => current_arg.push('\t'),
+                _ => current_arg.push(c),
+            }
+            escape_next = false;
+            continue;
+        }
+
         match c {
+            '\\' => {
+                escape_next = true; // Escape the next character
+            }
             '\'' if !in_double_quote => {
                 in_single_quote = !in_single_quote; // Toggle single quote state
             }
@@ -42,6 +57,10 @@ pub fn parse(input: &str) -> Result<ParsedCommand, &'static str> {
                 current_arg.push(c); // Add character to the current argument
             }
         }
+    }
+
+    if in_single_quote || in_double_quote {
+        return Err("Unclosed quote in input");
     }
 
     // Finalize the last argument
